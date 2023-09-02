@@ -1,0 +1,70 @@
+<scene version="3.0.0">
+<!-- 	<default name="integrator" value="path" /> -->
+	<default name="spp" value="64" />
+	<default name="resy" value="512" />
+	<default name="resx" value="512" />
+	<default name="max_depth" value="65" />
+	<integrator type="path">
+		<integer name="max_depth" value="$max_depth" />
+	</integrator>
+    
+<!--     <integrator type="aov">
+        <string name="aovs" value="uv:uv"/>
+<!--         <string name="aovs" value="shape_index:shape_index,uv:uv,duv_dx:duv_dx,duv_dy:duv_dy,boundary_test:boundary_test"/>
+        <integrator type="path" name="my_image"/>
+    </integrator> -->
+    
+	<sensor type="perspective">
+		<float name="fov" value="30" />
+		<transform name="to_world">
+			<lookat origin="1, 1, 0.05" target="0, 0, 0" up="0, 1, 0"/>
+		</transform>
+		<sampler type="independent">
+			<integer name="sample_count" value="$spp" />
+		</sampler>
+		<film type="hdrfilm">
+			<integer name="width" value="$resx" />
+			<integer name="height" value="$resy" />
+			<string name="file_format" value="openexr" />
+			<string name="pixel_format" value="rgb" />
+			<rfilter type="tent">
+<!--                 <float name="stddev" value="0.1"/> -->
+            </rfilter>
+		</film>
+	</sensor>
+
+    <texture type="bitmap" id="wood_olive_wood_olive_basecolor">
+        <string name="filename" value="wood_olive/wood_olive_wood_olive_basecolor_lowres.png"/>
+    </texture>
+    <texture type="bitmap" id="wood_olive_wood_olive_roughness">
+        <string name="filename" value="wood_olive/wood_olive_wood_olive_roughness_lowres.png"/>
+    </texture>
+
+	<bsdf type="twosided" id="MaterialBSDF">
+		<bsdf type="principled">
+			<ref name="base_color" id="wood_olive_wood_olive_basecolor" />
+			<float name="specular" value="0.6" />
+			<ref name="roughness" id="wood_olive_wood_olive_roughness" />
+		</bsdf>
+	</bsdf>
+
+	<shape type="obj" id="Material_0001">
+		<string name="filename" value="meshes/armadillo.obj" />
+		<transform name="to_world">
+			<matrix value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1" />
+		</transform>
+		<ref id="MaterialBSDF" />
+	</shape>
+
+<!-- 	<emitter type="point">
+        <rgb name="intensity" value="2"/>
+        <point name="position" x="1" y="1" z="0.05"/>
+    </emitter> -->
+
+	<emitter type="envmap">
+		<transform name="to_world">
+			<matrix value="-0.922278 0 0.386527 0 0 1 0 0 -0.386527 0 -0.922278 1.17369 0 0 0 1" />
+		</transform>
+		<string name="filename" value="studio.exr" />
+	</emitter>
+</scene>
